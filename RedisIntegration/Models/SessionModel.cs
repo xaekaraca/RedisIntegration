@@ -13,7 +13,9 @@ public class SessionModel
     
     public DateTime CreatedAt { get; set; }
     
-    public TimeSpan Expiration { get; set; }
+    public DateTime? RefreshedAt { get; set; }
+    
+    public DateTime Expiration { get; set; }
 }
 
 public class SessionUpdateModel

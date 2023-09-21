@@ -27,7 +27,8 @@ public class SessionService
     
     private static void UpdateExpiration(SessionModel session)
     {
-        session.Expiration = TimeSpan.FromMinutes(ExpireTime);
+        session.Expiration = DateTime.UtcNow.AddMinutes(ExpireTime);
+        session.RefreshedAt = DateTime.UtcNow;
     }
 
     public SessionModel CreateSession(UserModel user)
@@ -53,7 +54,7 @@ public class SessionService
             return null;
         
         var session = JsonConvert.DeserializeObject<SessionModel>(jsonData);
-
+        
         return session;
     }
 

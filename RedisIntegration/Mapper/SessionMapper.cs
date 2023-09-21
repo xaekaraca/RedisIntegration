@@ -11,8 +11,9 @@ public static class SessionMapper
             SessionId = Guid.NewGuid().ToString(),
             InformationId = user.InformationId,
             UserId = user.Id,
+            // show time as yyyy-MM-dd HH:mm:ss
             CreatedAt = DateTime.UtcNow,
-            Expiration = TimeSpan.FromMinutes(15)
+            Expiration = DateTime.UtcNow.AddMinutes(15)
         };
     }
 }
