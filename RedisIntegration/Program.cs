@@ -1,5 +1,4 @@
 using RedisIntegration;
-using RedisIntegration.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 

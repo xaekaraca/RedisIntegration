@@ -24,12 +24,6 @@ public class SessionService
     {
         return new DbAndSessionKeyModel { Db = _redis.GetDatabase(), SessionKey = $"{_redisSettings.RedisPrefix}:{userId}:session" };
     }
-    
-    private static void UpdateExpiration(SessionModel session)
-    {
-        session.Expiration = DateTime.UtcNow.AddMinutes(ExpireTime);
-        session.RefreshedAt = DateTime.UtcNow;
-    }
 
     public SessionModel CreateSession(UserModel user)
     {
@@ -58,7 +52,7 @@ public class SessionService
         return session;
     }
 
-    public SessionModel? UpdateAndRefreshSession(string userId, SessionUpdateModel sessionModel)
+    public SessionModel? UpdateAndRefreshSession(string userId, SessionUpdateModel sessionUpdateModel)
     {
         var getRedisDbAndSessionKey = GetRedisDbAndSessionKey(userId);
         
@@ -69,8 +63,7 @@ public class SessionService
         
         var session = JsonConvert.DeserializeObject<SessionModel>(jsonData);
         
-        session!.InformationId = sessionModel.InformationId;
-        UpdateExpiration(session);
+        session = SessionMapper.ToSessionModel(sessionUpdateModel, session!);
         
         jsonData = JsonConvert.SerializeObject(session);
         
@@ -90,7 +83,8 @@ public class SessionService
         
         var session = JsonConvert.DeserializeObject<SessionModel>(jsonData);
         
-        UpdateExpiration(session);
+        session!.Expiration = DateTime.UtcNow.AddMinutes(ExpireTime);
+        session.RefreshedAt = DateTime.UtcNow;
         
         jsonData = JsonConvert.SerializeObject(session);
         

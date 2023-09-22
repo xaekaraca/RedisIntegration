@@ -11,9 +11,18 @@ public static class SessionMapper
             SessionId = Guid.NewGuid().ToString(),
             InformationId = user.InformationId,
             UserId = user.Id,
-            // show time as yyyy-MM-dd HH:mm:ss
+            Roles  = user.Roles ?? new List<string>(),
             CreatedAt = DateTime.UtcNow,
             Expiration = DateTime.UtcNow.AddMinutes(15)
         };
+    }
+    
+    public static SessionModel ToSessionModel(SessionUpdateModel sessionUpdateModel, SessionModel session)
+    {
+        session.InformationId = sessionUpdateModel.InformationId;
+        session.Roles = sessionUpdateModel.Roles ?? session.Roles;
+        session.RefreshedAt = DateTime.UtcNow;
+        session.Expiration = DateTime.UtcNow.AddMinutes(15);
+        return session;
     }
 }

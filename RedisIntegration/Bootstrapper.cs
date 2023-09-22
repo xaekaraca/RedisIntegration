@@ -11,10 +11,5 @@ public static class Bootstrapper
             configuration.GetSection("RedisSettings"));
         
         services.AddSingleton<SessionService>();
-        
-        services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = configuration.GetSection("RedisSettings:ConnectionString").Value;
-        });
     }
 }

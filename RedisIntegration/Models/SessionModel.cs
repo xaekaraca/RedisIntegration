@@ -11,6 +11,8 @@ public class SessionModel
     
     public long InformationId { get; set; }
     
+    public List<string>? Roles { get; set; }
+    
     public DateTime CreatedAt { get; set; }
     
     public DateTime? RefreshedAt { get; set; }
@@ -21,6 +23,8 @@ public class SessionModel
 public class SessionUpdateModel
 {
     public long InformationId { get; set; } 
+    
+    public List<string>? Roles { get; set; }
 }
 public class DbAndSessionKeyModel
 {

@@ -33,6 +33,13 @@ public class SessionController : ControllerBase
         return Ok(session);
     }
     
+    [HttpPost("{userId}")]
+    public IActionResult RefreshSession([FromRoute] string userId)
+    {
+        _sessionService.RefreshSession(userId);
+        return Ok();
+    }
+    
     [HttpPut("{userId}")]
     public IActionResult UpdateSession([FromRoute] string userId, [FromBody] SessionUpdateModel sessionUpdateModel)
     {
