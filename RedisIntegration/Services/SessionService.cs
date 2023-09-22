@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RedisIntegration.Mapper;
 using RedisIntegration.Models;
@@ -19,17 +18,21 @@ public class SessionService
         _redis = ConnectionMultiplexer.Connect(redisSettings.Value.ConnectionString);
         _redisSettings = redisSettings.Value;
     }
-
+    
     private DbAndSessionKeyModel GetRedisDbAndSessionKey(string userId)
     {
-        return new DbAndSessionKeyModel { Db = _redis.GetDatabase(), SessionKey = $"{_redisSettings.RedisPrefix}:{userId}:session" };
+        return new DbAndSessionKeyModel
+        {
+            Db = _redis.GetDatabase(), 
+            SessionKey = $"{_redisSettings.RedisPrefix}:{userId}:session"
+        };
     }
-
+    
     public SessionModel CreateSession(UserModel user)
     {
         var getRedisDbAndSessionKey = GetRedisDbAndSessionKey(user.Id);
 
-        var session = SessionMapper.ToSessionModel(user);
+        var session = SessionMapper.ToSessionModel(user, getRedisDbAndSessionKey.SessionKey);
 
         var jsonData = JsonConvert.SerializeObject(session);
 
@@ -51,7 +54,7 @@ public class SessionService
         
         return session;
     }
-
+    
     public SessionModel? UpdateAndRefreshSession(string userId, SessionUpdateModel sessionUpdateModel)
     {
         var getRedisDbAndSessionKey = GetRedisDbAndSessionKey(userId);
@@ -71,7 +74,7 @@ public class SessionService
 
         return session;
     }
-
+    
     public void RefreshSession(string userId)
     {
         var getRedisDbAndSessionKey = GetRedisDbAndSessionKey(userId);
@@ -90,7 +93,7 @@ public class SessionService
         
         getRedisDbAndSessionKey.Db.StringSet(getRedisDbAndSessionKey.SessionKey, jsonData, TimeSpan.FromMinutes(ExpireTime));
     }
-
+    
     public void KillSession(string userId)
     {
         var getRedisDbAndSessionKey = GetRedisDbAndSessionKey(userId);

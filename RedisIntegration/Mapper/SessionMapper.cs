@@ -4,11 +4,11 @@ namespace RedisIntegration.Mapper;
 
 public static class SessionMapper
 {
-    public static SessionModel ToSessionModel(UserModel user)
+    public static SessionModel ToSessionModel(UserModel user, string sessionKey)
     {
         return new SessionModel
         {
-            SessionId = Guid.NewGuid().ToString(),
+            SessionKey = sessionKey,
             InformationId = user.InformationId,
             UserId = user.Id,
             Roles  = user.Roles ?? new List<string>(),
