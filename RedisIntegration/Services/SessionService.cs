@@ -100,5 +100,4 @@ public class SessionService
         
         getRedisDbAndSessionKey.Db.KeyDelete(getRedisDbAndSessionKey.SessionKey);
     }
-
 }
